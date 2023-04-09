@@ -1,12 +1,10 @@
-# Ansible Role: Wireguard
+# Ansible Role: CDP
 
-![CI](https://github.com/acavella/ansible-role-wireguard/actions/workflows/ci.yml/badge.svg)
-![GitHub last commit](https://img.shields.io/github/last-commit/acavella/ansible-role-wireguard)
-![GitHub repo size](https://img.shields.io/github/repo-size/acavella/ansible-role-wireguard)
+![CI](https://github.com/acavella/ansible-role-cdp/actions/workflows/ci.yml/badge.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/acavella/ansible-role-cdp)
+![GitHub repo size](https://img.shields.io/github/repo-size/acavella/ansible-role-cdp)
 
-An Ansible Role that installs and configures Wireguard on Linux.
-
-12/9/21: Version 0.9.1 temporarily removes support for CentOS and Fedora.  
+An Ansible Role that installs and configures a simple CDP on Linux.
 
 ## Requirements
 
@@ -40,9 +38,9 @@ None.
 ## Example Playbook
 
 ```yaml
-- hosts: myserver
-    roles:
-      - { role: acavella.wireguard }
+- hosts: localhost
+  roles:
+    - { role: acavella.cdp }
 ```
 ## License
 
@@ -50,4 +48,4 @@ GNU General Public License v3.0
 
 ## Author Information
 
-This role was created in 2021 by [Tony Cavella](https://www.cavella.com/)
+This role was created in 2023 by [Tony Cavella](https://www.cavella.com/)
