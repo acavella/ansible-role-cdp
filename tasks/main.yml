@@ -17,13 +17,14 @@
   ansible.builtin.copy:
     src: templates/updatecdp.sh.j2
     dest: /usr/bin/updatecdp.sh
-    owner: root
-    group: root
+    owner: cdpuser
+    group: cdpuser
     mode: '0744'
 - name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
   ansible.builtin.cron:
     name: "Update CDP"
     minute: "*/15"
+    user: cdpuser
     job: "/bin/bash /usr/bin/updatecdp.sh >/dev/null 2>&1"
 - name: Enable and start httpd service
   ansible.builtin.service:
