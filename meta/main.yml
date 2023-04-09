@@ -1,0 +1,21 @@
+---
+dependencies: []
+galaxy_info:
+  role_name: wireguard
+  author: acavella
+  description: Wireguard installation and base configuration  for Linux.
+  company: "altCipher"
+  license: "license (GPLv3)"
+  min_ansible_version: 2.9
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+  galaxy_tags:
+    - wireguard
+    - vpn

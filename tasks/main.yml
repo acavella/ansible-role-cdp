@@ -1,0 +1,50 @@
+---
+- name: Install dependencies
+  apt:
+    name:
+      - iptables
+      - wireguard
+    state: latest
+- name: Generate server and client keys
+  shell: |
+    cd /etc/wireguard
+    umask 077
+    wg genkey | tee server_private_key | wg pubkey > server_public_key
+    wg genkey | tee client_private_key | wg pubkey > client_public_key
+  args:
+    executable: /bin/bash
+- name: Set server private key to variable
+  slurp:
+    src: /etc/wireguard/server_private_key
+  register: server_private_key_encoded
+- name: Set client public key to variable
+  slurp:
+    src: /etc/wireguard/client_public_key
+  register: client_public_key_encoded
+- name: Decode keys
+  set_fact:
+    server_private_key: "{{server_private_key_encoded.content | b64decode}}"
+    client_public_key: "{{client_public_key_encoded.content | b64decode}}"
+- name: Update template and copy to destination server
+  template:
+    src: templates/wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+- name: Enable ipv4 forwarding via sysctl
+  copy:
+    src: templates/99-custom.conf.j2
+    dest: /etc/sysctl.d/99-custom.conf
+    owner: root
+    group: root
+    mode: '0644'
+- name: Set ip_forward dynamically and set final permissions
+  shell: |
+    sysctl -w net.ipv4.ip_forward=1
+    chown -R root:root /etc/wireguard/
+    chmod -R og-rwx /etc/wireguard/*
+  args:
+    executable: /bin/bash
+- name: Enable and start Wireguard service
+  service:
+    name: wg-quick@wg0
+    state: started
+    enabled: true
