@@ -3,7 +3,7 @@
   ansible.builtin.dnf:
     name: httpd
     state: latest
-- name: Add the user 'cdpuser' with a specific uid and a primary group of 'admin'
+- name: Add the user 'cdpuser' as a member of 'cdpuser' and 'www' groups
   ansible.builtin.user:
     name: cdpuser
     comment: CDP User
@@ -20,7 +20,7 @@
     owner: cdpuser
     group: cdpuser
     mode: '0744'
-- name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
+- name: Ensure a job runs every 15 minutes and updates CRLs
   ansible.builtin.cron:
     name: "Update CDP"
     minute: "*/15"
