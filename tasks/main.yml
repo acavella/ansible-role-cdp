@@ -9,17 +9,24 @@
     comment: CDP User
     shell: /sbin/nologin
     groups: cdpuser,www
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /var/www/cdp
+    state: directory
+    mode: '0664'
+    owner: cdpuser
+    group: www
 - name: Update template and copy to destination server
   ansible.builtin.template:
     src: templates/cdp.conf.j2
     dest: /etc/httpd/httpd.conf/cdp.conf
-- name: Enable ipv4 forwarding via sysctl
+- name: Copy script to '/usr/bin/'
   ansible.builtin.copy:
     src: templates/updatecdp.sh.j2
     dest: /usr/bin/updatecdp.sh
     owner: cdpuser
     group: cdpuser
-    mode: '0744'
+    mode: '0740'
 - name: Ensure a job runs every 15 minutes and updates CRLs
   ansible.builtin.cron:
     name: "Update CDP"
