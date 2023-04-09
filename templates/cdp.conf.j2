@@ -1,0 +1,6 @@
+<VirtualHost *:80>
+    ServerName {{ cdp_public_fqdn }}
+    DocumentRoot {{ cdp_www_dir }}
+    ErrorLog /var/log/httpd/cdp_error.log
+    CustomLog /var/log/cdp_access.log combined
+</VirtualHost>
