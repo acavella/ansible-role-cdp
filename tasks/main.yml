@@ -3,42 +3,42 @@
   ansible.builtin.dnf:
     name: httpd
     state: latest
-- name: Add the user 'cdpuser' as a member of 'cdpuser' and 'www' groups
+- name: Add the user 'cdpuser' 
   ansible.builtin.user:
     name: cdpuser
     comment: CDP User
     shell: /sbin/nologin
     group: apache
-- name: Create a directory if it does not exist
+- name: Create http directory
   ansible.builtin.file:
     path: /var/www/cdp
     state: directory
     mode: '0664'
     owner: cdpuser
     group: apache
-- name: Create a directory for script
+- name: Create script directory
   ansible.builtin.file:
     path: /usr/local/bin/updatecdp
     state: directory
     mode: '700'
     owner: cdpuser
-- name: Update template and copy to destination server
+- name: Update http template
   ansible.builtin.template:
     src: templates/cdp.conf.j2
     dest: /etc/httpd/conf.d/cdp.conf
-- name: Copy script to '/usr/bin/'
+- name: Copy script to '/usr/local/bin/'
   ansible.builtin.copy:
     src: templates/updatecdp.sh
     dest: /usr/local/bin/updatecdp/updatecdp.sh
     owner: cdpuser
     mode: '0740'
-- name: Copy script config to '/usr/bin/'
+- name: Update script config template
   ansible.builtin.template:
     src: templates/updatecdp.conf.j2
     dest: /usr/local/bin/updatecdp/updatecdp.conf
     owner: cdpuser
     mode: '0740'
-- name: Ensure a job runs every 15 minutes and updates CRLs
+- name: Create cronjob to run script
   ansible.builtin.cron:
     name: "Update CDP"
     minute: "*/15"
