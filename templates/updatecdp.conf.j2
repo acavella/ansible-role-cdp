@@ -1,0 +1,19 @@
+CRL_SOURCE=(
+    {% if cdp_crl_sources|length > 0 %}
+    {% for crl in cdp_crl_sources %}
+	"{{ crl }}"
+    {% endfor %}
+    {% endif %}
+)
+
+CRL_NAME=(
+	{% if cdp_crl_names|length > 0 %}
+    {% for name in cdp_crl_names %}
+	"{{ name }}"
+    {% endfor %}
+    {% endif %}
+)
+
+PUB_WWW="{{ cdp_www_dir }}"
+
+REMOTE_SERVER="{{ cdp_source_fqdn }}"
