@@ -8,7 +8,7 @@
     name: cdpuser
     comment: CDP User
     shell: /sbin/nologin
-    groups: cdpuser,apache
+    group: apache
 - name: Create a directory if it does not exist
   ansible.builtin.file:
     path: /var/www/cdp
@@ -22,24 +22,21 @@
     state: directory
     mode: '700'
     owner: cdpuser
-    groups: cdpuser
 - name: Update template and copy to destination server
   ansible.builtin.template:
     src: templates/cdp.conf.j2
-    dest: /etc/httpd/httpd.conf/cdp.conf
+    dest: /etc/httpd/conf.d/cdp.conf
 - name: Copy script to '/usr/bin/'
   ansible.builtin.copy:
     src: templates/updatecdp.sh
     dest: /usr/local/bin/updatecdp/updatecdp.sh
     owner: cdpuser
-    group: cdpuser
     mode: '0740'
 - name: Copy script config to '/usr/bin/'
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: templates/updatecdp.conf.j2
     dest: /usr/local/bin/updatecdp/updatecdp.conf
     owner: cdpuser
-    group: cdpuser
     mode: '0740'
 - name: Ensure a job runs every 15 minutes and updates CRLs
   ansible.builtin.cron:
