@@ -15,20 +15,20 @@ N/A
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 ```yaml
-# Public ethernet adapter
-public_ethernet_interface: eth0
+# List of http(s) sources to retrieve CRLs from.
+cdp_crl_sources: []
 
-# Port that must be accessible via public
-wireguard_port: 51820
-```
+# List corresponding names to serve CRLs by.
+cdp_crl_names: []
 
-Private and public keys used to define initial server and client configurations.
+# A fqdn or IP used by the script to validate connectivity via ping.
+cdp_source_fqdn: "ca1.example.com"
 
-```yaml
-server_private_key_encoded:  set to generated wireguard server private key, base64 encoded.
-client_public_key_encoded:   set to generated wireguard client public key, base64 encoded.
-server_private_key_decoded:  base64 decoded version of above key, used in wg0.conf.j2
-client_public_key_decoded:   base64 decoded version of above key, used in wg0.conf.j2
+# The fqdn used by the CDP to server to serve files.
+cdp_public_fqdn: "cdp.example.com"
+
+# Directory to save and serve CRL files from.
+cdp_www_dir: "/var/www/cdp"
 ```
 
 ## Dependencies
@@ -40,7 +40,7 @@ None.
 ```yaml
 - hosts: localhost
   roles:
-    - { role: acavella.cdp }
+    - { role: ansible_role_cdp }
 ```
 ## License
 
