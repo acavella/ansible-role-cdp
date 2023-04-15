@@ -80,6 +80,26 @@ download_crl() {
    done
 }
 
+get_crl_list() {
+   crl_list=$(mktemp)
+   echo "SOURCE,CRL ADDRESS" >> ${crl_list}
+   # loop through array and download crl
+   for i in "${CRL_SOURCE[@]}"
+   do
+      local temp_file=$(mktemp)
+      curl -k -s ${i} -o ${temp_file}
+      # parse with openssl, retrieve subject (cn)
+      local subject=$(openssl crl -inform DER -issuer -noout -in ${temp_file} -nameopt multiline |\ 
+      grep commonName | awk '{ for (i=3; i<=NF; i++) printf("%s ",$i) }END{ print"" }')
+      # remove spaces from subject
+      local filename=${subject//[[:blank:]]/}
+      echo "${i},http://${REMOTE_SERVER}/${filename}.crl" >> ${crl_list}
+      rm -rf ${temp_file}
+   done
+   column -t -s',' ${crl_list}
+   rm -rf ${crl_list}
+}
+
 fix_permissions() {
    chown apache:apache ${PUB_WWW} -R
    restorecon -r ${PUB_WWW}
