@@ -69,10 +69,9 @@ download_crl() {
          echo "zero byte file, exiting"
          exit 1 # exit due to zero byte file
       fi
-      # parse with openssl, retrieve cn
-      local crl_content=$(openssl crl -inform DER -issuer -noout -in ${temp_file}) -multiline
-      # strip subject (cn) from issuer string
-      local subject=$(sed)
+      # parse with openssl, retrieve subject (cn)
+      local subject=$(openssl crl -inform DER -issuer -noout -in ${temp_file} -nameopt multiline |\ 
+      grep commonName | awk '{ for (i=3; i<=NF; i++) printf("%s ",$i) }END{ print"" }')
       # remove spaces from subject
       local filename=${subject//[[:blank:]]/}
       # copy valid crl to www and rename
