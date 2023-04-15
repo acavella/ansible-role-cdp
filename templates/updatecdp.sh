@@ -112,5 +112,11 @@ main() {
    fix_permissions
 }
 
-main
-exit 0 # clean exit on success
+if [[ ${2} == "--print-config" ]]; then
+   get_crl_list
+   exit 0
+else
+   main
+   exit 0 # clean exit on success
+fi
+
