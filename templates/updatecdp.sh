@@ -52,36 +52,33 @@ check_connectivity() {
 }
 
 download_crl() {
-   # local, named variables
-   local count=0
-   echo "counter reset"
-   local tmp_dir=$(mktemp -d /tmp/cdp.XXXXXXX)
-   echo  "temp directory created"
-
    # loop through array and download CRL
    for i in "${CRL_SOURCE[@]}" 
    do 
-      curl -k -s ${i} -o ${tmp_dir}/${CRL_NAME[${count}]}
+      local temp_file=$(mktemp)
+      curl -k -s ${i} -o ${temp_file}
       # check for existence of file
-      if [ ! -e ${tmp_dir}/${CRL_NAME[${count}]} ]
+      if [ ! -e ${temp_file} ]
       then 
          echo "missing file, exiting"
          exit 1 # exit due to download fail/missing file
       fi
-      # check for zero byte file, copy valid crl to www
-      if [ -s ${tmp_dir}/${CRL_NAME[${count}]} ]
-      then 
-         echo "crl valid, moving to httpd"
-         mv ${tmp_dir}/${CRL_NAME[${count}]} ${PUB_WWW}
-      else
+      # check for zero byte file, 
+      if [ -s ${temp_file} ]
+      then
          echo "zero byte file, exiting"
          exit 1 # exit due to zero byte file
       fi
-   ((++count)) # increment counter
+      # parse with openssl, retrieve cn
+      local crl_content=$(openssl crl -inform DER -issuer -noout -in ${temp_file})
+      # strip subject (cn) from issuer string
+      local subject=$(sed)
+      # remove spaces from subject
+      local filename=${subject//[[:blank:]]/}
+      # copy valid crl to www and rename
+      echo "crl valid, moving to httpd"
+      mv ${temp_file} ${PUB_WWW}/${filename}.crl
    done
-
-   # clean up temp files
-   rm -rf ${tmp_dir}
 }
 
 fix_permissions() {
