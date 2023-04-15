@@ -1,6 +1,5 @@
 ---
 cdp_crl_sources: []
-cdp_crl_names: []
 cdp_source_fqdn: "ca1.example.com"
 cdp_public_fqdn: "cdp.example.com"
 cdp_www_dir: "/var/www/cdp"
