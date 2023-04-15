@@ -70,7 +70,7 @@ download_crl() {
          exit 1 # exit due to zero byte file
       fi
       # parse with openssl, retrieve cn
-      local crl_content=$(openssl crl -inform DER -issuer -noout -in ${temp_file})
+      local crl_content=$(openssl crl -inform DER -issuer -noout -in ${temp_file}) -multiline
       # strip subject (cn) from issuer string
       local subject=$(sed)
       # remove spaces from subject
